@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.0)
+project(IRController)
+
+if (CMAKE_VERSION VERSION_LESS "3.1")
+    if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
+        set(CMAKE_C_FLAGS "--std=gnu99 ${CMAKE_C_FLAGS}")
+    endif ()
+else ()
+    set(CMAKE_C_STANDARD 99)
+endif ()
+
+set(SOURCE_FILES main.c gpio/common.c gpio/event.c gpio/pwm.c)
+add_executable(IRController ${SOURCE_FILES})
+
+find_package(Threads REQUIRED)
+if (THREADS_HAVE_PTHREAD_ARG)
+    target_compile_options(IRController PUBLIC "-pthread")
+endif ()
+if (CMAKE_THREAD_LIBS_INIT)
+    target_link_libraries(IRController "${CMAKE_THREAD_LIBS_INIT}")
+endif ()
